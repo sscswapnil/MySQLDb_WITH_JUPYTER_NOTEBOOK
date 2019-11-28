@@ -1,0 +1,157 @@
+#Creat database in mysql workbench
+
+CREATE DATABASE ssc;   # database created refresh on left corner on schema
+
+
+#install required library
+
+pip install mysql-connector-python
+
+#import mysql.connector
+ 
+import mysql.connector
+
+#connect to the database
+
+mydb = mysql.connector.connect(
+  host="localhost",  # Always keep same= localhost only no 127.0.0.1
+  user="root",       # 
+  passwd="root"      # setpassword root( save as default)
+)
+
+# database save with the name mydb
+
+#check connection status
+
+print(mydb)
+
+#Show available databases
+
+mydb = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  passwd="root"
+)
+
+mycursor = mydb.cursor()
+
+mycursor.execute("SHOW DATABASES")
+
+for x in mycursor:
+  print(x) 
+
+# Output=
+
+('information_schema',)
+('mysql',)
+('performance_schema',)
+('sakila',)
+('ssc',)
+('sys',)
+('world',)
+
+#Select our created database
+
+mydb = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  passwd="root",
+  database="ssc"  #selected database
+) 
+
+# Creat table
+
+mydb = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  passwd="root",
+  database="ssc"
+)
+
+mycursor = mydb.cursor()
+
+mycursor.execute("CREATE TABLE sales (name VARCHAR(255), address VARCHAR(255))")
+
+# alter table
+
+mydb = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  passwd="root",
+  database="ssc"
+)
+
+mycursor = mydb.cursor()
+
+mycursor.execute("ALTER TABLE sales ADD COLUMN id INT AUTO_INCREMENT PRIMARY KEY") 
+
+#Insert one record
+
+mydb = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  passwd="root",
+  database="ssc"
+)
+
+mycursor = mydb.cursor()
+
+sql = "INSERT INTO sales (name, address) VALUES (%s, %s)"
+val = ("John", "Highway 21")
+mycursor.execute(sql, val)
+
+mydb.commit()
+
+print(mycursor.rowcount, "record inserted.")
+
+#insert 13 records (many) records
+
+mydb = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  passwd="root",
+  database="ssc"
+)
+
+mycursor = mydb.cursor()
+
+sql = "INSERT INTO sales (name, address) VALUES (%s, %s)"
+val = [
+  ('Peter', 'Lowstreet 4'),
+  ('Amy', 'Apple st 652'),
+  ('Hannah', 'Mountain 21'),
+  ('Michael', 'Valley 345'),
+  ('Sandy', 'Ocean blvd 2'),
+  ('Betty', 'Green Grass 1'),
+  ('Richard', 'Sky st 331'),
+  ('Susan', 'One way 98'),
+  ('Vicky', 'Yellow Garden 2'),
+  ('Ben', 'Park Lane 38'),
+  ('William', 'Central st 954'),
+  ('Chuck', 'Main Road 989'),
+  ('Viola', 'Sideway 1633')
+]
+
+mycursor.executemany(sql, val)
+
+mydb.commit()
+
+print(mycursor.rowcount, "was inserted.") 
+
+# Print all results which we inserted
+
+mydb = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  passwd="root",
+  database="ssc"
+)
+
+mycursor = mydb.cursor()
+
+mycursor.execute("SELECT * FROM sales")
+
+myresult = mycursor.fetchall()
+
+for x in myresult:
+  print(x)
